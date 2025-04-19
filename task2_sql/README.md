@@ -10,25 +10,31 @@ docker run --name pg-academy -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postg
 ```
 ![Скачивание и запуск контейнера PostgreSQL](screenshots/docker_run.png)
 
+```bash
 # Проверка, что контейнер работает
 docker ps
+```
+![Проверка, что контейнер работает](screenshots/docker_ps.png)
 
+```bash
 # Подключение к PostgreSQL
 docker exec -it pg-academy psql -U postgres
 ```
-
+![Подключение к PostgreSQL](screenshots/docker_exec.png)
 
 ## 2. Создание базы данных `academy`
 
 ```sql
 CREATE DATABASE academy;
 ```
-
+![Создание базы данных](screenshots/create_database.png)
 
 ## 3. Создание таблиц (по схеме)
 
 ```sql
 \c academy
+```
+![Подключение к базе данных](screenshots/connect_database.png)
 
 -- Таблица студентов
 CREATE TABLE Students (
