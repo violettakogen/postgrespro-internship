@@ -28,7 +28,7 @@ docker exec -it pg-academy psql -U postgres
 -- Создание базы
 CREATE DATABASE academy;
 ```
-<img src="screenshots/create_database.png" alt="Создание базы" width="300"/>
+<img src="screenshots/create_database.png" alt="Создание базы" width="200"/>
 
 ## 3. Создание таблиц (по схеме)
 
@@ -36,7 +36,7 @@ CREATE DATABASE academy;
 -- Подключение к базе
 \c academy
 ```
-<img src="screenshots/connect_database.png" alt="Подключение к базе данных" width="700"/>
+<img src="screenshots/connect_database.png" alt="Подключение к базе данных" width="500"/>
 
 ```sql
 -- Таблица студентов
