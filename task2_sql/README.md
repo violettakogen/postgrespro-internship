@@ -25,13 +25,15 @@ docker exec -it pg-academy psql -U postgres
 ## 2. Создание базы данных `academy`
 
 ```sql
+-- Создание базы
 CREATE DATABASE academy;
 ```
-![Создание базы данных](screenshots/create_database.png)
+![Создание базы](screenshots/create_database.png)
 
 ## 3. Создание таблиц (по схеме)
 
 ```sql
+-- Подключение к базе
 \c academy
 ```
 ![Подключение к базе данных](screenshots/connect_database.png)
@@ -42,92 +44,59 @@ CREATE TABLE Students (s_id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, star
 ```
 ![Создание таблицы студентов](screenshots/create_table.png)
 
-```
--- Проверка
-SELECT * FROM Students;
-
+```sql
 -- Таблица курсов
-CREATE TABLE Courses (
-    c_no SERIAL PRIMARY KEY,
-    title VARCHAR(100) NOT NULL,
-    hours INT CHECK (hours > 0)
-);
+CREATE TABLE Courses (c_no SERIAL PRIMARY KEY, title VARCHAR(100) NOT NULL, hours INT CHECK (hours > 0));
 -- Проверка
 SELECT * FROM Courses;
+```
+![Создание таблицы курсов](screenshots/create_table_courses.png)
 
+```sql
 -- Таблица экзаменов
-CREATE TABLE Exams (
-    s_id INT REFERENCES Students(s_id),
-    c_no INT REFERENCES Courses(c_no),
-    score INT CHECK (score >= 0 AND score <= 100),
-    PRIMARY KEY (s_id, c_no)
-);
+CREATE TABLE Exams (s_id INT REFERENCES Students(s_id), c_no INT REFERENCES Courses(c_no), score INT CHECK (score >= 0 AND score <= 100), PRIMARY KEY (s_id, c_no));
 -- Проверка
 SELECT * FROM Exams;
 ```
+![Создание таблицы курсов](screenshots/create_table_exams.png)
 
 > Я пробовала добавить `UNIQUE` на имя студента, но потом поняла, что имена могут повторяться, и убрала. Также пыталась задать `DEFAULT` значение для года, но не получилось.
-
 
 ## 4. Вставка тестовых данных
 
 ```sql
 -- Студенты
-INSERT INTO Students (name, start_year) VALUES
-('Alice', 2020),
-('Bob', 2021),
-('Charlie', 2022);
--- Проверка
-SELECT * FROM Students;
+INSERT INTO Students (name, start_year) VALUES ('Alice', 2020), ('Bob', 2021), ('Charlie', 2022); SELECT * FROM Students;
 
 -- Курсы
-INSERT INTO Courses (title, hours) VALUES
-('Mathematics', 100),
-('History', 80);
--- Проверка
-SELECT * FROM Courses;
+INSERT INTO Courses (title, hours) VALUES ('Mathematics', 100), ('History', 80); SELECT * FROM Courses;
 
 -- Экзамены
-INSERT INTO Exams (s_id, c_no, score) VALUES
-(1, 1, 85),
-(1, 2, 90),
-(2, 1, 75);
--- Проверка
-SELECT * FROM Exams;
+INSERT INTO Exams (s_id, c_no, score) VALUES (1, 1, 85), (1, 2, 90), (2, 1, 75); SELECT * FROM Exams;
 ```
-
+![Добавление сутеднтов, курсов, экзаменов](screenshots/create_insert.png)
 
 ## 5. Запрос: студенты без экзаменов
 
 ```sql
-SELECT s.*
-FROM Students s
-LEFT JOIN Exams e ON s.s_id = e.s_id
-WHERE e.s_id IS NULL;
+SELECT * FROM Students WHERE s_id NOT IN (SELECT s_id FROM Exams);
 ```
-
+![Запрос: студенты без экзаменов](screenshots/select_students_without_exams.png)
 
 ## 6. Запрос: студенты и количество сданных экзаменов
 
 ```sql
-SELECT s.name, COUNT(e.c_no) AS exam_count
-FROM Students s
-JOIN Exams e ON s.s_id = e.s_id
-GROUP BY s.name
-HAVING COUNT(e.c_no) > 0;
+SELECT name, COUNT(c_no) AS exam_count FROM Students s JOIN Exams e ON s.s_id = e.s_id GROUP BY name HAVING COUNT(c_no) > 0;
 ```
+![Запрос: студенты и количество сданных экзаменов](screenshots/select_students_with_exams.png)
 
 
 ## 7. Запрос: курсы и средний балл, по убыванию
 
 ```sql
-SELECT c.title, AVG(e.score) AS avg_score
-FROM Courses c
-JOIN Exams e ON c.c_no = e.c_no
-GROUP BY c.title
-ORDER BY avg_score DESC;
+SELECT title, AVG(score) AS avg_score FROM Courses c JOIN Exams e ON c.c_no = e.c_no GROUP BY title ORDER BY avg_score DESC;
 ```
-
+![Запрос: курсы и средний балл, по убыванию](screenshots/select_title_courses.png)
 
 ## 8*. Генерация данных вручную (псевдослучайно)
 
@@ -135,27 +104,28 @@ ORDER BY avg_score DESC;
 
 ```sql
 -- Студенты
-INSERT INTO Students (name, start_year) VALUES ('Student_1', 2020);
-INSERT INTO Students (name, start_year) VALUES ('Student_2', 2021);
-INSERT INTO Students (name, start_year) VALUES ('Student_3', 2019);
-INSERT INTO Students (name, start_year) VALUES ('Student_4', 2022);
-INSERT INTO Students (name, start_year) VALUES ('Student_5', 2023);
--- Проверка
+INSERT INTO Students (name, start_year) VALUES 
+('Alice', 2020), 
+('Bob', 2021), 
+('Charlie', 2022), 
+('Diana', 2023), 
+('Eve', 2021);
 SELECT * FROM Students;
 
 -- Курсы
-INSERT INTO Courses (title, hours) VALUES ('Course_A', 40);
-INSERT INTO Courses (title, hours) VALUES ('Course_B', 60);
-INSERT INTO Courses (title, hours) VALUES ('Course_C', 45);
--- Проверка
+INSERT INTO Courses (title, hours) VALUES 
+('Mathematics', 100), 
+('History', 80), 
+('Biology', 60);
 SELECT * FROM Courses;
 
-%%Экзамены
-INSERT INTO Exams (s_id, c_no, score) VALUES (1, 1, 78);
-INSERT INTO Exams (s_id, c_no, score) VALUES (1, 2, 88);
-INSERT INTO Exams (s_id, c_no, score) VALUES (2, 1, 91);
-INSERT INTO Exams (s_id, c_no, score) VALUES (3, 3, 65);
--- студент 4 и 5 пока не сдавали экзамены
--- Проверка
+-- Экзамены
+INSERT INTO Exams (s_id, c_no, score) VALUES 
+(1, 1, 85), 
+(1, 2, 90), 
+(2, 1, 75), 
+(3, 3, 88), 
+(4, 2, 79);
 SELECT * FROM Exams;
 ```
+![Генерация данных](screenshots/insert_into_students_courses_exams.png)
