@@ -36,12 +36,13 @@ CREATE DATABASE academy;
 ```
 ![Подключение к базе данных](screenshots/connect_database.png)
 
+```sql
 -- Таблица студентов
-CREATE TABLE Students (
-    s_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    start_year INT CHECK (start_year >= 1900 AND start_year <= EXTRACT(YEAR FROM CURRENT_DATE))
-);
+CREATE TABLE Students (s_id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, start_year INT CHECK (start_year >= 1900 AND start_year <= EXTRACT(YEAR FROM CURRENT_DATE)));
+```
+![Создание таблицы студентов](screenshots/create_table.png)
+
+```
 -- Проверка
 SELECT * FROM Students;
 
