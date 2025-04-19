@@ -64,6 +64,8 @@ SELECT * FROM Exams;
 
 ## 4. Вставка тестовых данных
 
+> Добавляю начальные записи в таблицы, чтобы можно было выполнять SQL-запросы и проверять работу базы данных.
+
 ```sql
 -- Студенты
 INSERT INTO Students (name, start_year) VALUES ('Alice', 2020), ('Bob', 2021), ('Charlie', 2022); SELECT * FROM Students;
@@ -77,6 +79,8 @@ INSERT INTO Exams (s_id, c_no, score) VALUES (1, 1, 85), (1, 2, 90), (2, 1, 75);
 ![Добавление сутеднтов, курсов, экзаменов](screenshots/create_insert.png)
 
 ## 5. Запрос: студенты без экзаменов
+
+> Решила использовать подзапрос с `NOT IN`, так как он короче, чем `LEFT JOIN ... WHERE IS NULL`, и тоже работает.
 
 ```sql
 SELECT * FROM Students WHERE s_id NOT IN (SELECT s_id FROM Exams);
@@ -100,7 +104,7 @@ SELECT title, AVG(score) AS avg_score FROM Courses c JOIN Exams e ON c.c_no = e.
 
 ## 8*. Генерация данных вручную (псевдослучайно)
 
-> Я пробовала делать генератор через цикл, но не разобралась. Поэтому сделала руками.
+> Здесь я вручную сгенерировала уникальные комбинации `s_id` и `c_no`, чтобы избежать конфликтов с PRIMARY KEY.
 
 ```sql
 -- Студенты
