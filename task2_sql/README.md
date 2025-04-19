@@ -126,3 +126,13 @@ INSERT INTO Exams (s_id, c_no, score) VALUES
 (4, 2, 79);
 ```
 <img src="screenshots/insert_into_students_courses_exams.png" alt="Генерация данных" width="500"/>
+
+## Дамп базы данных
+
+[Скачать academy_dump.sql](./db_dumps/academy_dump.sql)
+
+Для восстановления:
+
+```bash
+pg_restore -U postgres -d academy_dump.sql
+```
