@@ -8,7 +8,7 @@
 # Скачивание и запуск контейнера PostgreSQL
 docker run --name pg-academy -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
 ```
-![Скачивание и запуск контейнера PostgreSQL](screens/docker_run.png)
+![Скачивание и запуск контейнера PostgreSQL](screenshots/docker_run.png)
 
 # Проверка, что контейнер работает
 docker ps
