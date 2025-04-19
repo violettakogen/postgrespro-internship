@@ -8,19 +8,19 @@
 # Скачивание и запуск контейнера PostgreSQL
 docker run --name pg-academy -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
 ```
-![Скачивание и запуск контейнера PostgreSQL](screenshots/docker_run.png)
+<img src="screenshots/docker_run.png" alt="Скачивание и запуск контейнера PostgreSQL" width="700"/>
 
 ```bash
 # Проверка, что контейнер работает
 docker ps
 ```
-![Проверка, что контейнер работает](screenshots/docker_ps.png)
+<img src="screenshots/docker_ps.png" alt="Проверка, что контейнер работает" width="700"/>
 
 ```bash
 # Подключение к PostgreSQL
 docker exec -it pg-academy psql -U postgres
 ```
-![Подключение к PostgreSQL](screenshots/docker_exec.png)
+<img src="screenshots/docker_exec.png" alt="Подключение к PostgreSQL" width="300"/>
 
 ## 2. Создание базы данных `academy`
 
@@ -28,7 +28,7 @@ docker exec -it pg-academy psql -U postgres
 -- Создание базы
 CREATE DATABASE academy;
 ```
-![Создание базы](screenshots/create_database.png)
+<img src="screenshots/create_database.png" alt="Создание базы" width="300"/>
 
 ## 3. Создание таблиц (по схеме)
 
@@ -36,29 +36,25 @@ CREATE DATABASE academy;
 -- Подключение к базе
 \c academy
 ```
-![Подключение к базе данных](screenshots/connect_database.png)
+<img src="screenshots/connect_database.png" alt="Подключение к базе данных" width="700"/>
 
 ```sql
 -- Таблица студентов
 CREATE TABLE Students (s_id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, start_year INT CHECK (start_year >= 1900 AND start_year <= EXTRACT(YEAR FROM CURRENT_DATE)));
 ```
-![Создание таблицы студентов](screenshots/create_table.png)
+<img src="screenshots/create_table.png" alt="Создание таблицы студентов" width="700"/>
 
 ```sql
 -- Таблица курсов
 CREATE TABLE Courses (c_no SERIAL PRIMARY KEY, title VARCHAR(100) NOT NULL, hours INT CHECK (hours > 0));
--- Проверка
-SELECT * FROM Courses;
 ```
-![Создание таблицы курсов](screenshots/create_table_courses.png)
+<img src="screenshots/create_table_courses.png" alt="Создание таблицы курсов" width="700"/>
 
 ```sql
 -- Таблица экзаменов
 CREATE TABLE Exams (s_id INT REFERENCES Students(s_id), c_no INT REFERENCES Courses(c_no), score INT CHECK (score >= 0 AND score <= 100), PRIMARY KEY (s_id, c_no));
--- Проверка
-SELECT * FROM Exams;
 ```
-![Создание таблицы курсов](screenshots/create_table_exams.png)
+<img src="screenshots/create_table_exams.png" alt="Создание таблицы курсов" width="700"/>
 
 > Я пробовала добавить `UNIQUE` на имя студента, но потом поняла, что имена могут повторяться, и убрала. Также пыталась задать `DEFAULT` значение для года, но не получилось.
 
@@ -67,16 +63,16 @@ SELECT * FROM Exams;
 > Добавляю начальные записи в таблицы, чтобы можно было выполнять SQL-запросы и проверять работу базы данных.
 
 ```sql
--- Студенты
-INSERT INTO Students (name, start_year) VALUES ('Alice', 2020), ('Bob', 2021), ('Charlie', 2022); SELECT * FROM Students;
+-- Вставка студентов:
+INSERT INTO Students (name, start_year) VALUES ('Alice', 2020), ('Bob', 2021), ('Charlie', 2022);
 
--- Курсы
-INSERT INTO Courses (title, hours) VALUES ('Mathematics', 100), ('History', 80); SELECT * FROM Courses;
+-- Вставка курсов:
+INSERT INTO Courses (title, hours) VALUES ('Mathematics', 100), ('History', 80);
 
--- Экзамены
-INSERT INTO Exams (s_id, c_no, score) VALUES (1, 1, 85), (1, 2, 90), (2, 1, 75); SELECT * FROM Exams;
+-- Вставка экзаменов:
+INSERT INTO Exams (s_id, c_no, score) VALUES (1, 1, 85), (1, 2, 90), (2, 1, 75); -- Вывод для экзаменов:
 ```
-![Добавление сутеднтов, курсов, экзаменов](screenshots/create_insert.png)
+<img src="screenshots/create_insert.png" alt="Добавление сутеднтов, курсов, экзаменов" width="700"/>
 
 ## 5. Запрос: студенты без экзаменов
 
@@ -85,14 +81,14 @@ INSERT INTO Exams (s_id, c_no, score) VALUES (1, 1, 85), (1, 2, 90), (2, 1, 75);
 ```sql
 SELECT * FROM Students WHERE s_id NOT IN (SELECT s_id FROM Exams);
 ```
-![Запрос: студенты без экзаменов](screenshots/select_students_without_exams.png)
+<img src="screenshots/select_students_without_exams.png" alt="Запрос: студенты без экзаменов" width="500"/>
 
 ## 6. Запрос: студенты и количество сданных экзаменов
 
 ```sql
 SELECT name, COUNT(c_no) AS exam_count FROM Students s JOIN Exams e ON s.s_id = e.s_id GROUP BY name HAVING COUNT(c_no) > 0;
 ```
-![Запрос: студенты и количество сданных экзаменов](screenshots/select_students_with_exams.png)
+<img src="screenshots/select_students_with_exams.png" alt="Запрос: студенты и количество сданных экзаменов" width="700"/>
 
 
 ## 7. Запрос: курсы и средний балл, по убыванию
@@ -100,36 +96,33 @@ SELECT name, COUNT(c_no) AS exam_count FROM Students s JOIN Exams e ON s.s_id = 
 ```sql
 SELECT title, AVG(score) AS avg_score FROM Courses c JOIN Exams e ON c.c_no = e.c_no GROUP BY title ORDER BY avg_score DESC;
 ```
-![Запрос: курсы и средний балл, по убыванию](screenshots/select_title_courses.png)
+<img src="screenshots/select_title_courses.png" alt="Запрос: курсы и средний балл, по убыванию" width="700"/>
 
 ## 8*. Генерация данных вручную (псевдослучайно)
 
 > Здесь я вручную сгенерировала уникальные комбинации `s_id` и `c_no`, чтобы избежать конфликтов с PRIMARY KEY.
 
 ```sql
--- Студенты
+-- Вставка студентов:
 INSERT INTO Students (name, start_year) VALUES 
 ('Alice', 2020), 
 ('Bob', 2021), 
 ('Charlie', 2022), 
 ('Diana', 2023), 
 ('Eve', 2021);
-SELECT * FROM Students;
 
--- Курсы
+-- Вставка курсов:
 INSERT INTO Courses (title, hours) VALUES 
 ('Mathematics', 100), 
 ('History', 80), 
 ('Biology', 60);
-SELECT * FROM Courses;
 
--- Экзамены
+-- Вставка экзаменов:
 INSERT INTO Exams (s_id, c_no, score) VALUES 
 (1, 1, 85), 
 (1, 2, 90), 
 (2, 1, 75), 
 (3, 3, 88), 
 (4, 2, 79);
-SELECT * FROM Exams;
 ```
-![Генерация данных](screenshots/insert_into_students_courses_exams.png)
+<img src="screenshots/insert_into_students_courses_exams.png" alt="Генерация данных" width="500"/>
